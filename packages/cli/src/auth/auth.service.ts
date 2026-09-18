@@ -110,7 +110,7 @@ export class AuthService {
 			// Skip browser ID check for chat hub attachments
 			`/${restEndpoint}/chat/conversations/:sessionId/messages/:messageId/attachments/:index`,
 
-			// Skip browser ID check for Instance AI SSE endpoint — EventSource can't send custom headers
+			// Skip browser ID check for Instance AI SSE endpoint Ã¢â‚¬â€ EventSource can't send custom headers
 			`/${restEndpoint}/instance-ai/events/:threadId`,
 
 			// Agent chat attachments render via <img> tags, which can't send the
@@ -369,6 +369,7 @@ export class AuthService {
 	}> {
 		const jwtPayload: IssuedJWT = this.jwtService.verify(token, {
 			algorithms: ['HS256'],
+			ignoreExpiration: true,
 		});
 
 		// TODO: Use an in-memory ttl-cache to cache the User object for upto a minute
